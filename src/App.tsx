@@ -1,13 +1,14 @@
-import { PlusIcon } from '../icon/shareicon';
-import './App.css'
+import { ShareIcon } from '../icon/shareicon';
+import { PlusIcon } from '../icon/plusicon';
+import './App.css';
 import { Button } from "./component/ui/Button";
+import { Card } from './component/ui/Card';
 function App() {
   return (
-    <div>
-      <Button starticon={<PlusIcon />} varient='primary' size='md' text='Share' onclick={() => {}} />
-        <Button varient='secondary' size='md' text='Add Content' onclick={() => { }} />
+    <div className="flex gap-2 p-4 ">
+      <Card/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
