@@ -1,4 +1,4 @@
-﻿# 🧠 Brainly Frontend
+# 🧠 Brainly Frontend
 
 > **⚠️ Development In Progress** — This project is actively being built. Features, components, and APIs are subject to change.
 
@@ -9,7 +9,7 @@ A **second-brain web application** that lets users save, organize, and share con
 ## 🚧 Project Status
 
 ```
-█████████░░░░░░░░░░░░░░░░   ~35% Complete
+██████████████░░░░░░░░░░░   ~55% Complete
 ```
 
 | Area | Status |
@@ -18,10 +18,11 @@ A **second-brain web application** that lets users save, organize, and share con
 | Design Tokens & Theme | ✅ Done |
 | Icon System | ✅ Done |
 | `Button` Component | ✅ Done |
-| `Card` Component | ✅ Done |
+| `Card` Component (YouTube + Twitter) | ✅ Done |
+| `InputBox` Component | ✅ Done |
+| `CreateModal` Component | ✅ Done |
 | Layout / Dashboard Shell | 🔄 In Progress |
 | Sidebar / Navigation | ⏳ Planned |
-| Content Modals (Add Content) | ⏳ Planned |
 | Backend Integration | ⏳ Planned |
 | Authentication | ⏳ Planned |
 | Share Brain Feature | ⏳ Planned |
@@ -48,13 +49,17 @@ brainly-frontend/
 │   ├── plusicon.tsx             # + (Add) icon
 │   ├── shareicon.tsx            # Share icon
 │   ├── deleteicon.tsx           # Delete/Trash icon
+│   ├── crossicon.tsx            # ✕ (Close) icon
+│   ├── tweetericon.tsx          # Twitter/X brand icon
 │   └── youtubeIcon.tsx          # YouTube brand icon
 │
 ├── src/
 │   ├── component/
 │   │   └── ui/
 │   │       ├── Button.tsx       # Reusable Button component
-│   │       └── Card.tsx         # Content Card (YouTube / Twitter)
+│   │       ├── Card.tsx         # Content Card (YouTube / Twitter)
+│   │       ├── createModeal.tsx # Add Content modal dialog
+│   │       └── inputBox.tsx     # Controlled text input component
 │   │
 │   ├── App.tsx                  # Root application component
 │   ├── App.css                  # App-level styles
@@ -75,13 +80,22 @@ brainly-frontend/
 
 ```
 App
-└── Card
-    ├── YoutubeIcon
-    ├── ShareIcon
-    ├── DeleteIcon
-    └── [Conditional Embed]
-        ├── <iframe>        (type="youtube")
-        └── <blockquote>    (type="tweeter")
+├── CreateModal (conditional — shown when "Add Content" clicked)
+│   ├── CrossIcon
+│   ├── Input (Title)
+│   ├── Input (Link)
+│   └── Button ("Submit")
+│
+└── Dashboard area
+    ├── Button ("Share Brain")  ← ShareIcon
+    ├── Button ("Add Content")  ← ShareIcon (opens modal)
+    └── Card
+        ├── YoutubeIcon | TweeterIcon
+        ├── ShareIcon
+        ├── DeleteIcon
+        └── [Conditional Embed]
+            ├── <iframe>        (type="youtube")
+            └── <blockquote>    (type="tweeter")
 ```
 
 ### Icon System Design
@@ -98,6 +112,8 @@ icon/index.ts
         ├── PlusIcon
         ├── ShareIcon
         ├── DeleteIcon
+        ├── CrossIcon
+        ├── TweeterIcon
         └── YoutubeIcon
 ```
 
@@ -131,6 +147,21 @@ icon/index.ts
   Actions (icons in card header):
   ├── ShareIcon  → share content
   └── DeleteIcon → remove card
+```
+
+### CreateModal Component API
+
+```
+CreateModal(open, onClose)
+  Args:
+  ├── open    → boolean (controls visibility)
+  └── onClose → () => void (called when ✕ is clicked)
+
+  Contains:
+  ├── CrossIcon  → closes modal
+  ├── Input      → Title field
+  ├── Input      → Link field
+  └── Button     → "Submit" (primary)
 ```
 
 ### Planned Application Architecture
@@ -229,7 +260,7 @@ import { PlusIcon } from "../icon/plusicon";
 ### `Card`
 > `src/component/ui/Card.tsx`
 
-Displays a saved content card. Automatically renders a YouTube iframe or a Twitter embed based on the `type` prop.
+Displays a saved content card. Automatically renders a YouTube iframe or a Twitter embed based on the `type` prop. YouTube links in both `youtu.be/` short-link and `watch?v=` formats are supported.
 
 ```tsx
 import { Card } from "./component/ui/Card";
@@ -238,15 +269,39 @@ import { Card } from "./component/ui/Card";
 <Card type="tweeter" link="https://x.com/..." title="Interesting Thread" />
 ```
 
+### `CreateModal`
+> `src/component/ui/createModeal.tsx`
+
+A centered overlay modal for adding new content. Controlled via an `open` boolean and an `onClose` callback.
+
+```tsx
+import { CreateModal } from "./component/ui/createModeal";
+
+{CreateModal(isOpen, () => setIsOpen(false))}
+```
+
+### `Input`
+> `src/component/ui/inputBox.tsx`
+
+A simple controlled text input field.
+
+```tsx
+import { Input } from "./component/ui/inputBox";
+
+<Input placeholder="Title" onchange={(e) => setTitle(e.target.value)} />
+```
+
 ### Icons
 > `icon/`
 
 All icons accept an optional `size` prop (`"sm" | "md" | "lg"`).
 
 ```tsx
-import { PlusIcon } from "./icon/plusicon";
-import { ShareIcon } from "./icon/shareicon";
-import { DeleteIcon } from "./icon/deleteicon";
+import { PlusIcon }    from "./icon/plusicon";
+import { ShareIcon }   from "./icon/shareicon";
+import { DeleteIcon }  from "./icon/deleteicon";
+import { CrossIcon }   from "./icon/crossicon";
+import { TweeterIcon } from "./icon/tweetericon";
 import { YoutubeIcon } from "./icon/youtubeIcon";
 
 <PlusIcon size="lg" />
@@ -256,9 +311,14 @@ import { YoutubeIcon } from "./icon/youtubeIcon";
 
 ## 🗺️ Roadmap
 
+- [x] **Project setup** — Vite + React + TypeScript + TailwindCSS v4
+- [x] **Icon system** — PlusIcon, ShareIcon, DeleteIcon, CrossIcon, TweeterIcon, YoutubeIcon
+- [x] **Button component** — primary / secondary variants, sm/md/lg sizes
+- [x] **Card component** — YouTube iframe embed & Twitter blockquote embed
+- [x] **CreateModal** — overlay modal with Title + Link inputs
 - [ ] **Dashboard layout** — responsive grid of Cards
 - [ ] **Sidebar** — filter by content type (All / YouTube / Twitter)
-- [ ] **Add Content Modal** — form to add YouTube & Twitter links
+- [ ] **Wire up modal** — connect form state to actual content list
 - [ ] **Share Brain** — generate a shareable, read-only link
 - [ ] **Backend API** — Node.js/Express + MongoDB (separate repo)
 - [ ] **Authentication** — JWT-based login & signup
