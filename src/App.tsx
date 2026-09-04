@@ -1,10 +1,23 @@
+import { useState } from 'react';
+import { ShareIcon } from '../icon/shareicon';
 import './App.css';
-import { Button } from "./component/ui/Button";
+import { Button } from './component/ui/Button';
 import { Card } from './component/ui/Card';
+import { CreateModal } from './component/ui/createModeal';
 function App() {
+  const [modelopen,setmodal]=useState(false);
   return (
+    <div>
+      {CreateModal(modelopen, () => {
+        setmodal(false)
+      })}
+      <div className="flex gap-2 p-4 justify-end">
+        <Button variant='secondary' startIcon={<ShareIcon />} size="md"  text='Share Brain'/>
+        <Button variant='primary' startIcon={<ShareIcon />} size="md"  text='Add Content' onClick={()=>setmodal(true)}/>
+      </div>
     <div className="flex gap-2 p-4 ">
-      <Card type="tweeter" link="#" title="Example card" />
+      <Card type="youtube" link="https://youtu.be/oVrLk0C2nas?si=RUnYZ92FTd6WfK1B" title="Example card" />
+    </div>
     </div>
   );
 }
