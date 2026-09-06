@@ -1,6 +1,6 @@
 import { IconSizeVariant, type IconProps } from "./index";
 
-export function PlusIcon(props: IconProps) {
+export function PluseIcon(props: IconProps) {
     return (
         <div>
             <svg
