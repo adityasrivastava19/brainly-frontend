@@ -1,4 +1,4 @@
-﻿# Brainly Frontend
+# Brainly Frontend
 
 > **Development In Progress** - This project is actively being built. Features, components, and APIs are subject to change.
 
@@ -97,15 +97,15 @@ brainly-frontend/
 ```mermaid
 flowchart TD
     A([User visits app]) --> B{Has JWT token in localStorage?}
-    B -- No --> C[/signin]
+    B -- No --> C["/signin"]
     B -- Yes --> D{ProtectedRoute}
-    D -- Passes --> E[/dashboard]
+    D -- Passes --> E["/dashboard"]
     D -- Fails --> C
     C --> F[Signin Page]
     F --> G{Auth success?}
     G -- No --> F
-    G -- Yes store token --> E
-    H[/signup] --> I[Signup Page]
+    G -- Yes - store token --> E
+    H["/signup"] --> I[Signup Page]
     I --> C
     E --> J[Dashboard]
 ```
