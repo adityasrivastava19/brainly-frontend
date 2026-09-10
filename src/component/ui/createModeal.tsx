@@ -1,36 +1,45 @@
-import { CrossIcon } from '../../../icon/crossicon';
+import { CrossIcon } from '../../icon/crossicon';
 import { Input } from "./inputBox";
 import { Button } from "./Button";
 import { useForm } from 'react-hook-form';
-
-type FormValues = {
+import { Dropdown } from './dropbox';
+export type FormValues = {
     title: string;
     link: string;
+    type: "youtube" | "tweeter" | "document";
 };
 
-export function CreateModal(open: boolean, onClose: () => void)
+export function CreateModal({ open, onClose, onAddCard }: {
+    open: boolean;
+    onClose: () => void;
+    onAddCard: (card: FormValues) => void;
+})
 {
     const { register, handleSubmit } = useForm<FormValues>();
 
     function onsubmit(data: FormValues)
     {
-        console.log(data);
+        onAddCard(data);
+        onClose();
     }
 
     return (
         <div >
             {open &&  
-                <form onSubmit={handleSubmit(onsubmit)}>
+                <form onSubmit={handleSubmit(onsubmit)} className="fixed inset-0 z-40">
             <div className="fixed inset-0 flex items-center justify-center">
 
                                    
                     <div className="absolute inset-0 bg-slate-200/60" />
-                    <div className="h-80 w-70 relative bg-[#F5F1E8] p-4 rounded-lg">
+                    <div className="h-100 w-80 relative z-50 bg-[#F5F1E8] p-4 rounded-lg">
 
                         <div className="flex justify-end cursor-pointer" onClick={onClose}>
                         <CrossIcon/>
                         </div>
                         <div >
+                            <div className='flex justify-center' >
+                                <Dropdown res={register("type") } size='lg'/>
+                            </div>
                             <div className="mt-10 mb-6">
                             <Input placeholder="Title" res={register("title")}/>
                             </div>
@@ -38,7 +47,7 @@ export function CreateModal(open: boolean, onClose: () => void)
                             <Input placeholder="Link" res={register("link")}/>
                             </div>
                             <div className="flex justify-center">
-                            <Button variant="primary" text="Submit" size="md" />
+                            <Button variant="primary" text="Submit" size="login" type="submit" />
                             </div>
                              
                         </div>

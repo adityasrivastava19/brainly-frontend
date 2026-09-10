@@ -22,5 +22,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "icon/shareicon.tsx"]
+  "include": ["src", "src/icon/shareicon.tsx"]
 }

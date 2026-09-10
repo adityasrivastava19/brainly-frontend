@@ -1,9 +1,9 @@
-import { ShareIcon } from "../../../icon/shareicon";
-import { DeleteIcon } from '../../../icon/deleteicon';
-import { YoutubeIcon } from '../../../icon/youtubeIcon';
-import { TweeterIcon } from '../../../icon/tweetericon';
+import { ShareIcon } from "../../icon/shareicon";
+import { DeleteIcon } from '../../icon/deleteicon';
+import { YoutubeIcon } from '../../icon/youtubeIcon';
+import { TweeterIcon } from '../../icon/tweetericon';
 interface cardProps{
-    type:"youtube"|"tweeter",
+    type:"youtube"|"tweeter"|"document",
     link:string,
     title:string 
 }
