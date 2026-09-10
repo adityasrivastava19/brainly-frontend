@@ -20,7 +20,7 @@ export function Dropdown({
         >
             <option value="">Select type</option>
             <option value="youtube">YouTube</option>
-            <option value="tweeter">Twitter</option>
+            <option value="tweet">Twitter</option>
             <option value="document">Document</option>
         </select>
     );

@@ -2,35 +2,35 @@
 
 > **Development In Progress** - This project is actively being built. Features, components, and APIs are subject to change.
 
-A **second-brain web application** that lets users save, organize, and share content from YouTube and Twitter/X all in one place. Built with React, TypeScript, Vite, and TailwindCSS v4.
+A **second-brain web application** that lets users save, organize, search, and share content from YouTube and Twitter/X all in one place. Built with React, TypeScript, Vite, and TailwindCSS v4.
 
 ---
 
 ## Project Status
 
 ```
-██████████████████░░░░░░░   ~72% Complete
+████████████████████████░░   ~88% Complete
 ```
 
 | Area | Status |
 |------|--------|
-| Project Setup and Tooling | Done |
-| Design Tokens and Theme | Done |
-| Icon System | Done |
-| Button Component | Done |
-| Card Component YouTube + Twitter | Done |
-| InputBox Component | Done |
-| Dropbox Component | Done |
-| CreateModal Component | Done |
-| SideBar Component | Done |
-| ErrorBoundary Component | Done |
-| Layout / Dashboard Shell | Done |
-| Authentication Signin / Signup pages | Done |
-| Protected Route Guard | Done |
-| React Router Integration | Done |
-| Backend Integration | Planned |
-| Share Brain Feature | Planned |
-| Search and Filter | Planned |
+| Project Setup and Tooling | ✅ Done |
+| Design Tokens and Theme | ✅ Done |
+| Icon System | ✅ Done |
+| Button Component | ✅ Done |
+| Card Component YouTube + Twitter | ✅ Done |
+| InputBox Component | ✅ Done |
+| Dropbox Component | ✅ Done |
+| CreateModal Component | ✅ Done |
+| SideBar Component | ✅ Done |
+| ErrorBoundary Component | ✅ Done |
+| Layout / Dashboard Shell | ✅ Done |
+| Authentication Signin / Signup pages | ✅ Done |
+| Protected Route Guard | ✅ Done |
+| React Router Integration | ✅ Done |
+| Backend Integration (GET + POST content) | ✅ Done |
+| Search Content | ✅ Done |
+| Share Brain Feature | 🔲 Planned |
 
 ---
 
@@ -43,6 +43,7 @@ A **second-brain web application** that lets users save, organize, and share con
 | Vite | 8 | Build Tool and Dev Server |
 | TailwindCSS | v4 | Styling |
 | React Router DOM | v7 | Client-side routing |
+| React Hook Form | v7 | Form state management |
 
 ---
 
@@ -127,6 +128,7 @@ graph TD
 
     Dashboard --> CreateModal
     Dashboard --> SideBar
+    Dashboard --> SearchBar["Search Bar + Submit"]
     Dashboard --> CardGrid["Card Grid"]
     Dashboard --> Button_Share["Button Share Brain secondary"]
     Dashboard --> Button_Add["Button Add Content primary"]
@@ -159,6 +161,7 @@ sequenceDiagram
     participant User
     participant Dashboard
     participant CreateModal
+    participant Backend
     participant CardGrid
 
     User->>Dashboard: Clicks Add Content button
@@ -166,14 +169,46 @@ sequenceDiagram
     User->>CreateModal: Fills Title, selects Type, pastes Link
     User->>CreateModal: Clicks Submit
     CreateModal->>Dashboard: onAddCard(FormValues)
-    Dashboard->>CardGrid: setCards prev plus newCard
-    CardGrid->>User: New Card rendered
-    CreateModal->>Dashboard: onClose called open=false
+    Dashboard->>Backend: POST /api/v1/content with Bearer token
+    alt Success
+        Backend->>Dashboard: 201 returns saved content
+        Dashboard->>CardGrid: setCards prev plus newCard
+        CardGrid->>User: New Card rendered
+        Dashboard->>CreateModal: onClose called open=false
+    else Failure
+        Backend->>Dashboard: error response
+        Dashboard->>User: logs error to console
+    end
 ```
 
 ---
 
-### 4. Authentication Flow
+### 4. Data Flow - Search Content
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Dashboard
+    participant Backend
+
+    User->>Dashboard: Types query and submits search form
+    Dashboard->>Backend: GET /api/v1/search?q=query with Bearer token
+    alt Results found
+        Backend->>Dashboard: returns matching content array
+        Dashboard->>User: Renders filtered Card grid
+    else No results
+        Backend->>Dashboard: empty array
+        Dashboard->>User: Shows No content found message
+    else Error
+        Backend->>Dashboard: error response
+        Dashboard->>User: Shows error message in red
+    end
+    Note over Dashboard: Clearing the input resets to full card grid
+```
+
+---
+
+### 5. Authentication Flow
 
 ```mermaid
 sequenceDiagram
@@ -199,7 +234,7 @@ sequenceDiagram
 
 ---
 
-### 5. Icon System
+### 6. Icon System
 
 ```mermaid
 graph LR
@@ -221,7 +256,7 @@ graph LR
 
 ---
 
-### 6. Button Variants and Sizes
+### 7. Button Variants and Sizes
 
 ```mermaid
 graph TD
@@ -249,7 +284,7 @@ graph TD
 
 ---
 
-### 7. Planned Full-Stack Architecture
+### 8. Full-Stack Architecture
 
 ```mermaid
 graph TB
@@ -257,18 +292,19 @@ graph TB
         direction TB
         App2["App.tsx - React Router"]
         Auth2["Auth Pages - Signin / Signup"]
-        Dash2["Dashboard + Sidebar"]
+        Dash2["Dashboard + Sidebar + Search"]
         Cards2["Card Grid"]
     end
 
-    subgraph API["Backend API - Planned"]
+    subgraph API["Backend API - localhost:3000"]
         direction TB
         AuthRoute["/api/v1/user/signin and /signup"]
         ContentRoute["/api/v1/content - GET POST DELETE"]
-        ShareRoute["/api/v1/brain/share"]
+        SearchRoute["/api/v1/search?q=query"]
+        ShareRoute["/api/v1/brain/share - Planned"]
     end
 
-    subgraph DB["Database - Planned"]
+    subgraph DB["Database"]
         Mongo[(MongoDB)]
         UserCol["users collection"]
         ContentCol["content collection"]
@@ -276,8 +312,11 @@ graph TB
 
     Auth2 -->|POST credentials| AuthRoute
     AuthRoute -->|JWT token| Auth2
-    Dash2 -->|Bearer token| ContentRoute
+    Dash2 -->|Bearer token GET| ContentRoute
+    Dash2 -->|Bearer token POST| ContentRoute
+    Dash2 -->|Bearer token GET q=query| SearchRoute
     ContentRoute --> Mongo
+    SearchRoute --> Mongo
     Mongo --> UserCol
     Mongo --> ContentCol
     ShareRoute --> Mongo
@@ -294,6 +333,7 @@ graph TB
 
 - Node.js >= 18
 - npm >= 9
+- Backend server running at `http://localhost:3000` (see backend repo)
 
 ### Install and Run
 
@@ -319,6 +359,22 @@ Open http://localhost:5173 in your browser.
 | npm run build | Type-check and build for production |
 | npm run preview | Preview the production build locally |
 | npm run lint | Run ESLint across the codebase |
+
+---
+
+## API Reference
+
+The frontend communicates with a backend REST API. All protected endpoints require a `Bearer <token>` Authorization header.
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/user/signup` | No | Register a new user |
+| POST | `/api/v1/user/signin` | No | Sign in, returns JWT token |
+| GET | `/api/v1/content` | Yes | Fetch all saved content for the user |
+| POST | `/api/v1/content` | Yes | Save a new content card |
+| DELETE | `/api/v1/content` | Yes | Delete a content card |
+| GET | `/api/v1/search?q=query` | Yes | Search content by title |
+| POST | `/api/v1/brain/share` | Yes | *(Planned)* Generate shareable link |
 
 ---
 
@@ -349,7 +405,7 @@ Displays a saved content card. Renders a YouTube iframe or Twitter blockquote ba
 ### CreateModal
 > src/component/ui/createModeal.tsx
 
-A centered overlay modal for adding new content. Accepts an onAddCard callback so the parent Dashboard can append the new card to state.
+A centered overlay modal for adding new content. Accepts an `onAddCard` callback that POSTs to the backend and appends the returned card to the dashboard state on success.
 
 ```tsx
 <CreateModal
@@ -408,11 +464,11 @@ import { AcadmicIcon } from "./icon/acadmicicon";
 - [x] Authentication pages - Signin and Signup with form validation
 - [x] Protected routes - JWT token guard via React Router
 - [x] React Router - /signin, /signup, /dashboard routes
-- [ ] Wire modal to backend - persist content via API calls
+- [x] Backend integration - GET and POST content via REST API with Bearer token auth
+- [x] Search - filter saved content by title via `/api/v1/search`
 - [ ] Share Brain - generate a shareable read-only link
-- [ ] Backend API - Node.js/Express + MongoDB separate repo
-- [ ] Search and Filter - filter saved content by type / title
-- [ ] Tagging System - categorize and organize saved content
+- [ ] Delete content - wire delete button to `DELETE /api/v1/content`
+- [ ] Backend API - Node.js/Express + MongoDB (separate repo)
 
 ---
 

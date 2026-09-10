@@ -3,7 +3,7 @@ import { DeleteIcon } from '../../icon/deleteicon';
 import { YoutubeIcon } from '../../icon/youtubeIcon';
 import { TweeterIcon } from '../../icon/tweetericon';
 interface cardProps{
-    type:"youtube"|"tweeter"|"document",
+    type:"youtube"|"tweet"|"document"|"link",
     link:string,
     title:string 
 }
@@ -15,7 +15,7 @@ export function Card({ type, link, title }: cardProps)
             <div className="flex items-center text-gray-800">
                 <div className="w-10 h-10 rounded-md cursor-pointer transition-shadow hover:shadow-md  hover:bg-gray-200 flex items-center justify-center">
                 {type==="youtube"&& <YoutubeIcon/>}
-                {type==="tweeter"&& <TweeterIcon/>}
+                {type==="tweet"&& <TweeterIcon/>}
                 </div>
                 <div className="text-lg">
                 {title}
@@ -30,7 +30,7 @@ export function Card({ type, link, title }: cardProps)
                     </div> 
             </div>
         </div>
-        {type==="tweeter"&&  <div className=" flex justify-content origin-top scale-y-50 scale-x-90 mb-6 cursor-pointer">
+        {type==="tweet"&&  <div className=" flex justify-content origin-top scale-y-50 scale-x-90 mb-6 cursor-pointer">
          <blockquote className="twitter-tweet"> <a href={link}>August 31, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charSet="utf-8"></script>
     </div> }
     {type==="youtube"&& <div>

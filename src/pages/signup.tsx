@@ -38,6 +38,7 @@ export function Signup() {
         setResponse(result);
 
         if (res.ok) {
+            localStorage.setItem("token", result.token);
             navigate("/dashboard");
         }
         else{

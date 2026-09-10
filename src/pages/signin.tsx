@@ -31,7 +31,7 @@ export function Signin() {
         const {res,result} = await signin(data);
             setResponse(result);
         if (res.ok) {
-            localStorage.setItem("token", result.message as string);
+                localStorage.setItem("token", result.token);
             navigate("/dashboard");
         }
     }

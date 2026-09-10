@@ -6,7 +6,7 @@ import { Dropdown } from './dropbox';
 export type FormValues = {
     title: string;
     link: string;
-    type: "youtube" | "tweeter" | "document";
+    type: "youtube" | "tweet" | "document" | "link";
 };
 
 export function CreateModal({ open, onClose, onAddCard }: {
@@ -41,10 +41,10 @@ export function CreateModal({ open, onClose, onAddCard }: {
                                 <Dropdown res={register("type") } size='lg'/>
                             </div>
                             <div className="mt-10 mb-6">
-                            <Input placeholder="Title" res={register("title")}/>
+                            <Input type="text" placeholder="Title" res={register("title")}/>
                             </div>
                             <div className="mb-6">
-                            <Input placeholder="Link" res={register("link")}/>
+                            <Input type="text" placeholder="Link" res={register("link")}/>
                             </div>
                             <div className="flex justify-center">
                             <Button variant="primary" text="Submit" size="login" type="submit" />
